@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000; 
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #ffffff; 
+        }
+
+        header {
+            background-color: #333333; 
+            color: #ffffff; 
+            padding: 10px 0;
+        }
+
+        nav a {
+            margin: 0 15px;
+            color: #ffffff; 
+            text-decoration: none;
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 200px;
+            border: 1px solid #666666;
+            background-color: #333333; 
+            color: #ffffff; 
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #444444;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555555; 
+        }
+
+        .about {
+            margin: 20px;
+            text-align: left;
+            color: #ffffff; 
+        }
+
+    
+        #easterEggVideo {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            display: none;
+        }
+
+    
+        .easter-egg-button {
+            padding: 5px 10px;
+            background-color: #555555;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 12px; 
+            margin-left: 10px; 
+        }
+
+        .easter-egg-button:hover {
+            background-color: #666666; 
+        }
+    </style>
+    <script>
+        let registeredUsers = JSON.parse(localStorage.getItem('users')) || {};
+
+        function checkLogin() {
+            let isLoggedIn = localStorage.getItem('loggedIn');
+            if (isLoggedIn) {
+                document.getElementById('welcomeSection').classList.remove('hidden');
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('registrationSection').classList.add('hidden');
+                document.getElementById('aboutSection').classList.remove('hidden');
+            } else {
+                document.getElementById('welcomeSection').classList.add('hidden');
+                document.getElementById('loginSection').classList.remove('hidden');
+                document.getElementById('registrationSection').classList.add('hidden');
+                document.getElementById('aboutSection').classList.add('hidden');
+            }
+        }
+
+        function register() {
+            let email = document.getElementById('regEmail').value;
+            let password = document.getElementById('regPassword').value;
+
+            if (registeredUsers[email]) {
+                alert("Este e-mail já está registrado. Tente fazer login.");
+                return;
+            }
+
+            registeredUsers[email] = password;
+            localStorage.setItem('users', JSON.stringify(registeredUsers));
+            alert("Registro bem-sucedido! Agora você pode fazer login.");
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPassword').value = '';
+        }
+
+        function login() {
+            let email = document.getElementById('logEmail').value;
+            let password = document.getElementById('logPassword').value;
+
+            if (registeredUsers[email] && registeredUsers[email] === password) {
+                alert("Login bem-sucedido! Bem-vindo.");
+                localStorage.setItem('loggedIn', true);
+                checkLogin();
+            } else {
+                alert("Credenciais inválidas. Por favor, tente novamente.");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('loggedIn');
+            checkLogin();
+        }
+
+        function playEasterEggVideo() {
+            const video = document.getElementById('easterEggVideo');
+            video.style.display = 'block'; 
+            video.play(); 
+        }
+
+        window.onload = checkLogin;
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'e') {
+                playEasterEggVideo();
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <img src="/imbages/chibi_yako.png" alt="Logo" class="logo">
+        <h1><a>Pixen's Basement</a></h1>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="page1.html">Sessão 1</a>
+            <a href="page2.html">Sessão 2</a>
+            <a href="page3.html">Sessão 3</a>
+            <a href="page4.html">Sessão 4</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="loginSection">
+            <h2>Login</h2>
+            <form onsubmit="event.preventDefault(); login();">
+                <input type="email" id="logEmail" placeholder="E-mail" required>
+                <input type="password" id="logPassword" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+            <p>Não tem uma conta? <a href="#" onclick="document.getElementById('registrationSection').classList.remove('hidden');">Registre-se aqui</a>.</p>
+        </section>
+
+        <section id="registrationSection" class="hidden">
+            <h2>Crie sua conta</h2>
+            <form onsubmit="event.preventDefault(); register();">
+                <input type="email" id="regEmail" placeholder="E-mail" required>
+                <input type="password" id="regPassword" placeholder="Senha" required>
+                <button type="submit">Registrar</button>
+            </form>
+            <p>Já tem uma conta? <a href="#" onclick="document.getElementById('loginSection').classList.remove('hidden');">Faça login aqui</a>.</p>
+        </section>
+
+        <section id="welcomeSection" class="hidden">
+            <h2>Bem-vindo!</h2>
+            <p>Você está logado. Sinta-se à vontade para explorar.</p>
+            <button onclick="logout()">Sair</button>
+            <button class="easter-egg-button" onclick="playEasterEggVideo()">🎥</button> <!-- Easter egg button -->
+        </section>
+
+        <section id="aboutSection" class="hidden about">
+            <h2>Olá! Sou Pixenmee Von Viceroy</h2>
+            <p>Um artista visual de 18 anos que se dedica à arte monocromática, utilizando cores fortes para expressar emoções e narrativas profundas. Convido você a apreciar minha arte, que é uma extensão da minha alma e uma janela para as experiências que moldaram quem sou.</p>
+            <p>Desde muito jovem, sempre fui fascinado pelo poder da arte. Lembro-me de quando tinha apenas cinco anos, e meu pai me presenteou com um conjunto de tintas e pincéis. Aquele foi o início de uma jornada que me levaria a explorar não apenas as cores, mas também as sombras e a luz que habitam a vida. A arte se tornou meu refúgio, um lugar onde eu podia expressar sentimentos que muitas vezes não consegui colocar em palavras. Através da arte, encontrei uma forma de comunicar as alegrias e tristezas que vivenciei ao longo da minha vida.</p>
+            <p>Sou autodidata em arte, e essa liberdade de aprendizado me permitiu desenvolver um estilo único. Não sigo regras tradicionais; em vez disso, deixo que a minha intuição guie cada pincelada. Minhas obras são inspiradas em momentos significativos, em pessoas que cruzaram meu caminho e nas lições que aprendi. Por exemplo, uma de minhas obras mais impactantes foi inspirada em um relacionamento que se desfez. Usei tons de roxo profundo para representar o amor vivênciado e o luto, contrastando com explosões de vermelho para simbolizar a paixão e a intensidade que aquela relação trouxe à minha vida. Essa dualidade é uma constante em meu trabalho, refletindo a complexidade das emoções humanas.</p>
+            <p>Embora eu não tenha uma página no Twitter, minha arte fala por mim. Compartilho meu trabalho em pequenas exposições locais e em redes sociais, onde busco conectar-me com outros artistas e apreciadores da arte. Cada feedback que recebo é uma fonte de motivação, pois sei que minha arte ressoa com as experiências de outras pessoas. Acredito que a arte tem o poder de unir, de contar histórias que muitas vezes permanecem em silêncio. Ao criar, espero não apenas expressar minha visão de mundo, mas também proporcionar um espaço para que outros reflitam sobre suas próprias jornadas.</p>
+            <p>Convido você a explorar meu trabalho e a mergulhar nas histórias que cada obra carrega. A arte é uma linguagem universal, e espero que, ao olhar para minhas criações, você possa sentir uma conexão, uma emoção ou até mesmo uma lembrança que ressoe com sua própria vida. Agradeço por dedicar seu tempo a apreciar minha arte e por ser parte dessa jornada criativa que é tão especial para mim.</p>
+            <br>
+            <p>É assim que me pareço na vida real:</p>
+        </section>
+        <video id="easterEggVideo" controls>
+            <source src="/gachi/BILLY_HERRINGTON_AT_LAGUNA_BEACH (2).mp4" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+        </video>
+    </main>
+</body>
+</html>
